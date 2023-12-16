@@ -17,6 +17,7 @@ export default function HomePage() {
     <div>
       <Title>Title</Title>
       <Text>This is some text</Text>
+      <Button color="brand">Button</Button>
       <Button>Button</Button>
     </div>
   );
