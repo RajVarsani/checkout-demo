@@ -1,0 +1,33 @@
+{
+  "name": "mantine-minimal-next-template",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbo",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@mantine/colors-generator": "^7.3.2",
+    "@mantine/core": "7.3.1",
+    "@mantine/hooks": "7.3.1",
+    "chroma-js": "^2.4.2",
+    "next": "^14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "zustand": "^4.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.4",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.0.4",
+    "postcss": "^8.4.32",
+    "postcss-preset-mantine": "^1.11.1",
+    "postcss-simple-vars": "^7.0.1",
+    "typescript": "^5.3.3"
+  },
+  "packageManager": "yarn@4.0.1"
+}
