@@ -1,14 +1,15 @@
 "use client";
 
+import { IBrandMetadata } from "@/interfaces/IBrandMetadata";
 import { useBrandStore } from "@/store/brand.store";
 import { generateColorsMap } from "@mantine/colors-generator";
 import {
+  MantineColorShade,
   MantineProvider,
   createTheme,
   defaultVariantColorsResolver,
   parseThemeColor,
 } from "@mantine/core";
-import { IBrandMetadata } from "../interfaces/IBrandMetadata";
 
 type colorList = [
   string,
@@ -24,9 +25,11 @@ type colorList = [
 ];
 function ClientProviders({
   brandMetadata,
+  fontFamily,
   children,
 }: {
   brandMetadata: IBrandMetadata;
+  fontFamily: string;
   children: any;
 }) {
   const primaryColorsMap = generateColorsMap(brandMetadata.theme["--primary"]);
@@ -38,11 +41,16 @@ function ClientProviders({
   return (
     <MantineProvider
       theme={createTheme({
+        fontFamily: fontFamily,
+        headings: {
+          fontFamily: fontFamily,
+        },
         primaryColor: "brand",
         colors: {
           brand: primaryColorsMap.colors as colorList,
         },
-        primaryShade: 9,
+        defaultRadius: 9999,
+        primaryShade: primaryColorsMap.baseColorIndex as MantineColorShade,
         black: brandMetadata.theme["--foreground"],
         white: brandMetadata.theme["--background"],
         variantColorResolver: (input) => {
@@ -52,13 +60,6 @@ function ClientProviders({
             theme: input.theme,
           });
 
-          console.log(
-            parsedColor.isThemeColor,
-            parsedColor.color === "brand",
-            input.variant === "filled",
-            parsedColor.color,
-            input.color
-          );
           // Overried the foreground color for filled primary components
           if (
             parsedColor.isThemeColor &&

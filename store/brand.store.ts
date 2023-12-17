@@ -6,6 +6,6 @@ type Store = {
   metadata: IBrandMetadata;
 };
 
-export const useBrandStore = create<Store>()((set) => ({
+export const useBrandStore = create<Store>((set) => ({
   metadata: DEFAULT_BRAND_METADATA,
 }));

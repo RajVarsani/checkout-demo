@@ -1,5 +1,5 @@
 import { IBrandMetadata } from "@/interfaces/IBrandMetadata";
-import API_CONSTANTS from "../utils/api.constants";
+import API_CONSTANTS from "@/utils/api.constants";
 import DEFAULT_BRAND_METADATA from "@/utils/defaultBrandMetadata";
 
 export const fetchBrandMetadata = async (): Promise<{
@@ -7,7 +7,7 @@ export const fetchBrandMetadata = async (): Promise<{
   ok: boolean;
 }> => {
   const response = await fetch(API_CONSTANTS.GET_BRAND_METADATA, {
-    next: { revalidate: 60 }, // Revalidate at most every minute
+    next: { revalidate: 60 }, // Revalidate at most every minute to use a different brand theme
   });
 
   if (!response.ok) {

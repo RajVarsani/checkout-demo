@@ -1,24 +1,38 @@
 "use client";
 
-import { useBrandStore } from "@/store/brand.store";
-import { Button, Text, Title } from "@mantine/core";
+import CartDetails from "@/components/checkout/CartDetails";
+import CartEditor from "@/components/checkout/CartEditor";
+import CartLoading from "@/components/checkout/CartLoading";
+import CheckoutFrame from "@/components/checkout/CheckoutFrame";
+import EmptyCart from "@/components/checkout/EmptyCart";
+import { useCheckoutStore } from "@/store/checkout.store";
+import React from "react";
 
 const STATIC_CONTENT = {
-  brand: {
-    fallback: {
-      log: "Failed to fetch brand metadata",
-    },
-  },
+  errorLog: "Error loading order details: ",
 };
 export default function HomePage() {
-  const meta = useBrandStore((state) => state.metadata);
+  // const meta = useBrandStore((state) => state.metadata);
+  const { refreshOrderDetails, cartItems, loading, error } = useCheckoutStore();
 
-  return (
-    <div>
-      <Title>Title</Title>
-      <Text>This is some text</Text>
-      <Button color="brand">Button</Button>
-      <Button>Button</Button>
-    </div>
-  );
+  React.useEffect(() => {
+    refreshOrderDetails();
+  }, []);
+
+  const decideComponent = () => {
+    if (loading) {
+      return <CartLoading />;
+    }
+
+    if (error) {
+      throw new Error(STATIC_CONTENT.errorLog + error);
+    }
+
+    if (!cartItems.length) {
+      return <EmptyCart />;
+    }
+
+    return <CartDetails />;
+  };
+  return <CheckoutFrame>{decideComponent()}</CheckoutFrame>;
 }
