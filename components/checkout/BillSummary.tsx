@@ -10,6 +10,7 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { IconChevronRight, IconX } from "@tabler/icons-react";
+import styles from "./BillSummary.module.css";
 
 const STATIC_CONTENT = {
   offers: {
@@ -31,6 +32,7 @@ function BillSummary() {
   const {
     cartItems,
     promoCode: promoCodeApplied,
+    getDiscount,
     applyPromoCode,
     removePromoCode,
   } = useCheckoutStore((state) => state);
@@ -58,7 +60,7 @@ function BillSummary() {
               {promoCodeApplied ? (
                 <>
                   <Text span fw={700}>
-                    {promoCodeApplied.name || ""}
+                    {promoCodeApplied || ""}
                   </Text>
                   {STATIC_CONTENT.offers.applied}
                 </>
@@ -71,10 +73,7 @@ function BillSummary() {
             <Collapse in={!!promoCodeApplied}>
               <Text c={"dimmed"}>
                 <Text span fw={700}>
-                  $
-                  {promoCodeApplied
-                    ?.getDiscount(getSubtotal(cartItems))
-                    .toFixed(2) || 0}
+                  ${getDiscount(getSubtotal(cartItems)).toFixed(2)}
                 </Text>
                 {STATIC_CONTENT.offers.savings}
               </Text>
@@ -95,7 +94,11 @@ function BillSummary() {
       <Flex direction="column" gap={4}>
         <Flex justify="space-between" align="center">
           <Text c="dimmed">{STATIC_CONTENT.summary.subtotal}</Text>
-          <Text fw={600}>
+          <Text
+            fw={600}
+            className={styles.value}
+            key={"subtotal/" + getSubtotal(cartItems)}
+          >
             {"$"}
             {getSubtotal(cartItems).toFixed(2)}
           </Text>
@@ -104,29 +107,32 @@ function BillSummary() {
           <Text c="dimmed">{STATIC_CONTENT.summary.delivery}</Text>
           <Text fw={600}>FREE</Text>
         </Flex>
-        <Collapse in={!!promoCodeApplied}>
+        {/* <Collapse in={!!promoCodeApplied}> */}
+        {promoCodeApplied && (
           <Flex justify="space-between" align="center">
             <Text c="dimmed">{STATIC_CONTENT.summary.discount}</Text>
             <Text fw={600}>
               {promoCodeApplied
-                ? "-$" +
-                  promoCodeApplied
-                    ?.getDiscount(getSubtotal(cartItems))
-                    .toFixed(2)
+                ? "-$" + getDiscount(getSubtotal(cartItems)).toFixed(2)
                 : ""}
             </Text>
           </Flex>
-        </Collapse>
+        )}
+        {/* </Collapse> */}
         <Flex justify="space-between" align="center">
           <Text c="dimmed" size="lg" fw={500}>
             {STATIC_CONTENT.summary.total}
           </Text>
-          <Text fw={700} size="lg">
+          <Text
+            fw={700}
+            size="lg"
+            className={styles.value}
+            key={"total/" + getSubtotal(cartItems) + "/" + promoCodeApplied}
+          >
             {"$"}
             {promoCodeApplied
               ? (
-                  getSubtotal(cartItems) -
-                  promoCodeApplied.getDiscount(getSubtotal(cartItems))
+                  getSubtotal(cartItems) - getDiscount(getSubtotal(cartItems))
                 ).toFixed(2)
               : getSubtotal(cartItems).toFixed(2)}
           </Text>

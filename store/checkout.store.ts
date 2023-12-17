@@ -16,10 +16,8 @@ type Store = {
   refreshOrderDetails: (forced?: boolean) => void;
   updateCartItems: (cartItems: ICartProduct[]) => void;
   updatePaymentMethod: (paymentMethod: PaymentMethod) => void;
-  promoCode: {
-    name: string;
-    getDiscount: (total: number) => number;
-  } | null;
+  promoCode: string | null;
+  getDiscount: (total: number) => number;
   applyPromoCode: () => void;
   removePromoCode: () => void;
 };
@@ -56,12 +54,11 @@ export const useCheckoutStore = create(
       },
       applyPromoCode: () => {
         set({
-          promoCode: {
-            name: "GROWW",
-            getDiscount: (total: number) => Math.min(total * 0.1, 10),
-          },
+          promoCode: "GROWW",
         });
       },
+      getDiscount: (total: number) =>
+        get().promoCode ? Math.min(total * 0.1, 10) : 0,
       removePromoCode: () => {
         set({ promoCode: null });
       },
