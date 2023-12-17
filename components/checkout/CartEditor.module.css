@@ -6,3 +6,37 @@
   /* it automatically converts the hex color value into rgb and then you can add your desired alpha channel */
   box-shadow: 5px 10px 36px 0px var(--shadow-color);
 }
+
+.quantity {
+  animation: quantity 0.5s ease-out;
+}
+
+@keyframes quantity {
+  0% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  20% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.cost {
+  animation: cost 0.25s ease-out;
+}
+
+@keyframes cost {
+  0% {
+    transform: translateY(0.5rem);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

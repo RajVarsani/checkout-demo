@@ -1,6 +1,6 @@
 import { useCheckoutStore } from "@/store/checkout.store";
 import { getPrimaryColorWithOpacity } from "@/utils/colors.helper";
-import { ActionIcon, Flex, Grid, Text, Title } from "@mantine/core";
+import { ActionIcon, Flex, Grid, Text, Title, Transition } from "@mantine/core";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import Image from "next/image";
 import styles from "./CartEditor.module.css";
@@ -54,7 +54,11 @@ function CartEditor() {
                 <Title order={5} lineClamp={2}>
                   {item.title}
                 </Title>
-                <Text c="dimmed">
+                <Text
+                  c="dimmed"
+                  className={styles.cost}
+                  key={item.id + "/" + (item.price * item.quantity).toFixed(2)}
+                >
                   {"$"}
                   {(item.price * item.quantity).toFixed(2)}
                 </Text>
@@ -75,7 +79,12 @@ function CartEditor() {
                   >
                     <IconMinus size={14} />
                   </ActionIcon>
-                  <Text>{item.quantity}</Text>
+                  <Text
+                    className={styles.quantity}
+                    key={item.id + "/" + item.quantity}
+                  >
+                    {item.quantity}
+                  </Text>
                   <ActionIcon
                     aria-label="Increase quantity"
                     disabled={item.quantity >= 10}
