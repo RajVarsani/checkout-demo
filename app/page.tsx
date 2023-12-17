@@ -6,16 +6,25 @@ import CartLoading from "@/components/checkout/CartLoading";
 import CheckoutFrame from "@/components/checkout/CheckoutFrame";
 import EmptyCart from "@/components/checkout/EmptyCart";
 import { useCheckoutStore } from "@/store/checkout.store";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const STATIC_CONTENT = {
   errorLog: "Error loading order details: ",
 };
 export default function HomePage() {
-  // const meta = useBrandStore((state) => state.metadata);
-  const { refreshOrderDetails, cartItems, loading, error } = useCheckoutStore();
+  const router = useRouter();
+  const { refreshOrderDetails, cartItems, loading, error, stage } =
+    useCheckoutStore();
 
   React.useEffect(() => {
+    if (stage !== "cart") {
+      router.push(stage);
+      return;
+    }
+    if (cartItems.length > 0) {
+      return;
+    }
     refreshOrderDetails();
   }, []);
 

@@ -37,7 +37,7 @@ function BillSummary() {
     removePromoCode,
   } = useCheckoutStore((state) => state);
   return (
-    <Flex direction="column" gap={16} w="100%" maw={500}>
+    <Flex direction="column" gap={16} w="100%">
       <Title order={4} fw={700}>
         {STATIC_CONTENT.offers.title}
       </Title>

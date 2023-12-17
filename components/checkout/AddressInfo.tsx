@@ -13,7 +13,7 @@ const STATIC_CONTENT = {
 
 function AddressInfo() {
   return (
-    <Flex direction="column" gap={12} w="100%" maw={500}>
+    <Flex direction="column" gap={12} w="100%">
       <Title order={4} fw={800}>
         {STATIC_CONTENT.title}
       </Title>

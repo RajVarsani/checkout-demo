@@ -13,13 +13,17 @@ type Store = {
   selectedPaymentMethod: PaymentMethod | null;
   loading: boolean;
   error: string | null;
+  promoCode: string | null;
+  stage: "cart" | "payment" | "result";
+  orderResult: "success" | "failure" | "pending";
   refreshOrderDetails: (forced?: boolean) => void;
   updateCartItems: (cartItems: ICartProduct[]) => void;
   updatePaymentMethod: (paymentMethod: PaymentMethod) => void;
-  promoCode: string | null;
   getDiscount: (total: number) => number;
   applyPromoCode: () => void;
   removePromoCode: () => void;
+  updateStage: (stage: "cart" | "payment" | "result") => void;
+  updateOrderResult: (result: "success" | "failure" | "pending") => void;
 };
 
 export const useCheckoutStore = create(
@@ -31,6 +35,8 @@ export const useCheckoutStore = create(
       loading: true,
       error: null,
       promoCode: null,
+      stage: "cart",
+      orderResult: "pending",
       refreshOrderDetails: async (forced: boolean = false) => {
         if (!forced && get().cartItems.length > 0) return;
         set({ loading: true });
@@ -61,6 +67,12 @@ export const useCheckoutStore = create(
         get().promoCode ? Math.min(total * 0.1, 10) : 0,
       removePromoCode: () => {
         set({ promoCode: null });
+      },
+      updateStage: (stage: "cart" | "payment" | "result") => {
+        set({ stage });
+      },
+      updateOrderResult: (result: "success" | "failure" | "pending") => {
+        set({ orderResult: result });
       },
     }),
     {
