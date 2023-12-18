@@ -8,7 +8,7 @@ export interface ICartProduct {
 
 export enum PaymentMethod {
   UPI = "UPI",
-  Cards = "CARDS", // Optionally capitalize enum members; however, consistency is key
+  CARDS = "CARDS", // Optionally capitalize enum members; however, consistency is key
 }
 
 export interface IOrderDetails {

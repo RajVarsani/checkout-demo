@@ -49,7 +49,7 @@ function ClientProviders({
         colors: {
           brand: primaryColorsMap.colors as colorList,
         },
-        defaultRadius: 9999,
+        defaultRadius: 24,
         primaryShade: primaryColorsMap.baseColorIndex as MantineColorShade,
         black: brandMetadata.theme["--foreground"],
         white: brandMetadata.theme["--background"],

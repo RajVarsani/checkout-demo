@@ -1,6 +1,13 @@
 import { useCheckoutStore } from "@/store/checkout.store";
 import { getPrimaryColorWithOpacity } from "@/utils/colors.helper";
-import { ActionIcon, Flex, Grid, Text, Title, Transition } from "@mantine/core";
+import {
+  ActionIcon,
+  Flex,
+  Grid,
+  NumberFormatter,
+  Text,
+  Title,
+} from "@mantine/core";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import Image from "next/image";
 import styles from "./CartEditor.module.css";
@@ -59,8 +66,11 @@ function CartEditor() {
                   className={styles.cost}
                   key={item.id + "/" + (item.price * item.quantity).toFixed(2)}
                 >
-                  {"$"}
-                  {(item.price * item.quantity).toFixed(2)}
+                  <NumberFormatter
+                    prefix="$ "
+                    value={(item.price * item.quantity).toFixed(2)}
+                    thousandSeparator
+                  />
                 </Text>
                 <Flex
                   direction="row"
@@ -101,12 +111,6 @@ function CartEditor() {
                 </Flex>
               </Flex>
             </Grid.Col>
-            {/* <Flex direction="column" gap={4} w="100%">
-              <Text>
-                {"$"}
-                {item.price * item.quantity}
-              </Text>
-            </Flex> */}
           </Grid>
         );
       })}

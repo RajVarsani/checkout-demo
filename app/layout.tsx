@@ -3,9 +3,9 @@ import "@/global.css";
 import { fetchBrandMetadata } from "@/services/brand.service";
 import { ColorSchemeScript } from "@mantine/core";
 import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 import { Metadata } from "next";
 import { Manrope } from "next/font/google";
-import Image from "next/image";
 
 const fontData = Manrope({
   subsets: ["latin-ext"],
@@ -34,17 +34,6 @@ export default async function RootLayout({ children }: { children: any }) {
         />
       </head>
       <body>
-        {/* {randomImage.response.results.map((image: any, index: number) => {
-          return (
-            <Image
-              src={image.urls.small}
-              width={200}
-              height={200}
-              alt="Test"
-              key={index}
-            />
-          );
-        })} */}
         <ClientProviders
           brandMetadata={brandMetadata.data}
           fontFamily={fontData.style.fontFamily}

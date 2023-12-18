@@ -5,14 +5,29 @@ import {
 } from "@/interfaces/ICheckout";
 import { getOrderDetails } from "@/services/checkout.service";
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 
 type Store = {
   cartItems: ICartProduct[];
-  availablePaymentMethods: PaymentMethod[];
-  selectedPaymentMethod: PaymentMethod | null;
   loading: boolean;
   error: string | null;
+  availablePaymentMethods: PaymentMethod[];
+  selectedPaymentMethod: PaymentMethod | null;
+  paymentState: {
+    [PaymentMethod.UPI]: {
+      upiID: string;
+      isVerified: boolean;
+      error?: boolean;
+    };
+    [PaymentMethod.CARDS]: {
+      cardNumber: string;
+      cvv: string;
+      expiry: Date;
+      name: string;
+      isVerified: boolean;
+      error: ("number" | "cvv" | "expiry" | "name")[];
+    };
+  };
   promoCode: string | null;
   stage: "cart" | "payment" | "result";
   orderResult: "success" | "failure" | "pending";
@@ -24,6 +39,21 @@ type Store = {
   removePromoCode: () => void;
   updateStage: (stage: "cart" | "payment" | "result") => void;
   updateOrderResult: (result: "success" | "failure" | "pending") => void;
+  updatePaymentState: (state: {
+    upi?: {
+      upiID?: string;
+      isVerified?: boolean;
+      error?: boolean;
+    };
+    card?: {
+      cardNumber?: string;
+      cvv?: string;
+      expiry?: Date;
+      name?: string;
+      isVerified?: boolean;
+      error?: ("number" | "cvv" | "expiry" | "name")[];
+    };
+  }) => void;
 };
 
 export const useCheckoutStore = create(
@@ -37,6 +67,23 @@ export const useCheckoutStore = create(
       promoCode: null,
       stage: "cart",
       orderResult: "pending",
+      paymentState: {
+        UPI: {
+          upiID: "",
+          isVerified: false,
+        },
+        CARDS: {
+          cardNumber: "",
+          cvv: "",
+          // new date of next year
+          expiry: new Date(
+            new Date().setFullYear(new Date().getFullYear() + 1)
+          ),
+          name: "",
+          isVerified: false,
+          error: [],
+        },
+      },
       refreshOrderDetails: async (forced: boolean = false) => {
         if (!forced && get().cartItems.length > 0) return;
         set({ loading: true });
@@ -47,6 +94,27 @@ export const useCheckoutStore = create(
             availablePaymentMethods: data.paymentMethods,
             selectedPaymentMethod: data.paymentMethods[0],
             loading: false,
+            // reset other states
+            promoCode: null,
+            stage: "cart",
+            orderResult: "pending",
+            paymentState: {
+              UPI: {
+                upiID: "",
+                isVerified: false,
+                error: false,
+              },
+              CARDS: {
+                cardNumber: "",
+                cvv: "",
+                expiry: new Date(
+                  new Date().setFullYear(new Date().getFullYear() + 1)
+                ),
+                name: "",
+                isVerified: false,
+                error: [],
+              },
+            },
           });
         } catch (e: any) {
           set({ error: e, loading: false });
@@ -73,6 +141,34 @@ export const useCheckoutStore = create(
       },
       updateOrderResult: (result: "success" | "failure" | "pending") => {
         set({ orderResult: result });
+      },
+      updatePaymentState: (state: {
+        upi?: {
+          upiID?: string;
+          isVerified?: boolean;
+          error?: boolean;
+        };
+        card?: {
+          cardNumber?: string;
+          cvv?: string;
+          expiry?: Date;
+          name?: string;
+          isVerified?: boolean;
+          error?: ("number" | "cvv" | "expiry" | "name")[];
+        };
+      }) => {
+        set({
+          paymentState: {
+            UPI: {
+              ...get().paymentState.UPI,
+              ...state.upi,
+            },
+            CARDS: {
+              ...get().paymentState.CARDS,
+              ...state.card,
+            },
+          },
+        });
       },
     }),
     {

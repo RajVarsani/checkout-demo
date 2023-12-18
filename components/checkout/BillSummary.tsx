@@ -5,6 +5,7 @@ import {
   Collapse,
   Divider,
   Flex,
+  NumberFormatter,
   Text,
   Title,
   UnstyledButton,
@@ -99,8 +100,12 @@ function BillSummary() {
             className={styles.value}
             key={"subtotal/" + getSubtotal(cartItems)}
           >
-            {"$"}
-            {getSubtotal(cartItems).toFixed(2)}
+            <NumberFormatter
+              decimalScale={2}
+              prefix="$ "
+              value={getSubtotal(cartItems)}
+              thousandSeparator
+            />
           </Text>
         </Flex>
         <Flex justify="space-between" align="center">
@@ -112,13 +117,15 @@ function BillSummary() {
           <Flex justify="space-between" align="center">
             <Text c="dimmed">{STATIC_CONTENT.summary.discount}</Text>
             <Text fw={600}>
-              {promoCodeApplied
-                ? "-$" + getDiscount(getSubtotal(cartItems)).toFixed(2)
-                : ""}
+              <NumberFormatter
+                decimalScale={2}
+                prefix="$ "
+                value={getDiscount(getSubtotal(cartItems)).toFixed(2)}
+                thousandSeparator
+              />
             </Text>
           </Flex>
         )}
-        {/* </Collapse> */}
         <Flex justify="space-between" align="center">
           <Text c="dimmed" size="lg" fw={500}>
             {STATIC_CONTENT.summary.total}
@@ -129,12 +136,14 @@ function BillSummary() {
             className={styles.value}
             key={"total/" + getSubtotal(cartItems) + "/" + promoCodeApplied}
           >
-            {"$"}
-            {promoCodeApplied
-              ? (
-                  getSubtotal(cartItems) - getDiscount(getSubtotal(cartItems))
-                ).toFixed(2)
-              : getSubtotal(cartItems).toFixed(2)}
+            <NumberFormatter
+              decimalScale={2}
+              prefix="$ "
+              value={
+                getSubtotal(cartItems) - getDiscount(getSubtotal(cartItems))
+              }
+              thousandSeparator
+            />
           </Text>
         </Flex>
       </Flex>
