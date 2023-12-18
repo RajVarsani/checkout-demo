@@ -1,5 +1,6 @@
 import { PaymentMethod } from "@/interfaces/ICheckout";
 import { useCheckoutStore } from "@/store/checkout.store";
+import { getSubtotal } from "@/utils/checkout.helper";
 import {
   ActionIcon,
   Button,
@@ -7,23 +8,38 @@ import {
   Container,
   Fieldset,
   Flex,
-  PinInput,
+  NumberFormatter,
   Radio,
   Text,
   TextInput,
   Title,
 } from "@mantine/core";
+import { MonthPickerInput } from "@mantine/dates";
+import { useMediaQuery } from "@mantine/hooks";
 import { IconChevronLeft, IconCircleCheckFilled } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./Payment.module.css";
-import { Calendar, DateInput, MonthPickerInput } from "@mantine/dates";
-import { useMediaQuery } from "@mantine/hooks";
 
 const STATIC_CONTENT = {
   title: "Payment",
   subtitle: "Select a payment method from the options below to continue.",
-  continue: "Complete Order ->",
+  continue: (amountoPay: number) => {
+    return (
+      <Text>
+        Pay{" "}
+        <Text span fw={700}>
+          <NumberFormatter
+            decimalScale={2}
+            prefix="$"
+            value={amountoPay}
+            thousandSeparator
+          />{" "}
+        </Text>
+        and Order
+      </Text>
+    );
+  },
   paymentMethods: {
     upi: {
       input: {
@@ -68,6 +84,8 @@ function Payment() {
   const isSmallScreen = useMediaQuery("(max-width: 30rem)");
   const router = useRouter();
   const {
+    cartItems,
+    getDiscount,
     updatePaymentMethod,
     availablePaymentMethods,
     selectedPaymentMethod,
@@ -329,11 +347,8 @@ function Payment() {
                     value={paymentMethod.toString()}
                     label={paymentMethod}
                   />
-                  <Flex direction="column">
-                    <Collapse
-                      key={index * 2 + 1}
-                      in={selectedPaymentMethod === paymentMethod}
-                    >
+                  <Flex direction="column" key={index * 2 + 1}>
+                    <Collapse in={selectedPaymentMethod === paymentMethod}>
                       {PaymentMethodComponents[paymentMethod]}
                     </Collapse>
                   </Flex>
@@ -348,7 +363,9 @@ function Payment() {
           onClick={() => router.push("/result")}
           maw={isSmallScreen ? undefined : 300}
         >
-          {STATIC_CONTENT.continue}
+          {STATIC_CONTENT.continue(
+            getSubtotal(cartItems) - getDiscount(getSubtotal(cartItems))
+          )}
         </Button>
       </Flex>
     </Container>
