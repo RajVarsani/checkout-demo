@@ -11,7 +11,7 @@ export enum PaymentMethod {
   CARDS = "CARDS", // Optionally capitalize enum members; however, consistency is key
 }
 
-export enum OrderStatus {
+export enum OrderResult {
   SUCCESS = "success",
   FAILURE = "failure",
   PENDING = "pending",

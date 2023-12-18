@@ -1,5 +1,6 @@
 "use client";
 
+import OrderResult from "@/components/result/OrderResult";
 import { useCheckoutStore } from "@/store/checkout.store";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -11,6 +12,8 @@ export default function Page() {
     stage,
     updateStage,
     availablePaymentMethods,
+    selectedPaymentMethod,
+    paymentState,
     orderResult,
   } = useCheckoutStore();
 
@@ -18,12 +21,19 @@ export default function Page() {
     router.push("/");
   }
 
+  if (
+    !selectedPaymentMethod ||
+    !paymentState[selectedPaymentMethod].isVerified
+  ) {
+    router.push("/payment");
+  }
+
   React.useEffect(() => {
-    if (stage !== "payment") {
-      updateStage("payment");
+    if (stage !== "result") {
+      updateStage("result");
       return;
     }
   }, []);
 
-  return <>Result is : {orderResult}</>;
+  return <OrderResult />;
 }

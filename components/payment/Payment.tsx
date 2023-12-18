@@ -1,4 +1,4 @@
-import { OrderStatus, PaymentMethod } from "@/interfaces/ICheckout";
+import { OrderResult, PaymentMethod } from "@/interfaces/ICheckout";
 import { useCheckoutStore } from "@/store/checkout.store";
 import { getSubtotal } from "@/utils/checkout.helper";
 import {
@@ -367,12 +367,12 @@ function Payment() {
             !paymentState[selectedPaymentMethod]?.isVerified
           }
           onClick={() => {
-            const resultValues = Object.values(OrderStatus);
+            const resultValues: OrderResult[] = Object.values(OrderResult);
             console.log(resultValues);
             const randomResult =
               resultValues[Math.floor(Math.random() * resultValues.length)];
             updateStage("result");
-            updateOrderResult(randomResult as typeof orderResult);
+            updateOrderResult(randomResult);
             router.push("/result");
           }}
           maw={isSmallScreen ? undefined : 300}

@@ -7,11 +7,20 @@ import React from "react";
 
 export default function Page() {
   const router = useRouter();
-  const { cartItems, stage, updateStage, availablePaymentMethods } =
-    useCheckoutStore();
+  const {
+    cartItems,
+    stage,
+    updateStage,
+    availablePaymentMethods,
+    orderResult,
+  } = useCheckoutStore();
 
   if (!cartItems.length || !availablePaymentMethods.length) {
     router.push("/");
+  }
+
+  if (orderResult === "success" || orderResult === "pending") {
+    router.push("/result");
   }
 
   React.useEffect(() => {
