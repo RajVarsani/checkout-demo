@@ -1,6 +1,7 @@
 import {
   ICartProduct,
   IOrderDetails,
+  OrderStatus,
   PaymentMethod,
 } from "@/interfaces/ICheckout";
 import { getOrderDetails } from "@/services/checkout.service";
@@ -30,7 +31,7 @@ type Store = {
   };
   promoCode: string | null;
   stage: "cart" | "payment" | "result";
-  orderResult: "success" | "failure" | "pending";
+  orderResult: OrderStatus;
   refreshOrderDetails: (forced?: boolean) => void;
   updateCartItems: (cartItems: ICartProduct[]) => void;
   updatePaymentMethod: (paymentMethod: PaymentMethod) => void;
@@ -38,7 +39,7 @@ type Store = {
   applyPromoCode: () => void;
   removePromoCode: () => void;
   updateStage: (stage: "cart" | "payment" | "result") => void;
-  updateOrderResult: (result: "success" | "failure" | "pending") => void;
+  updateOrderResult: (result: OrderStatus) => void;
   updatePaymentState: (state: {
     upi?: {
       upiID?: string;
@@ -66,7 +67,7 @@ export const useCheckoutStore = create(
       error: null,
       promoCode: null,
       stage: "cart",
-      orderResult: "pending",
+      orderResult: OrderStatus.PENDING,
       paymentState: {
         UPI: {
           upiID: "",
@@ -97,7 +98,7 @@ export const useCheckoutStore = create(
             // reset other states
             promoCode: null,
             stage: "cart",
-            orderResult: "pending",
+            orderResult: OrderStatus.PENDING,
             paymentState: {
               UPI: {
                 upiID: "",
@@ -139,7 +140,7 @@ export const useCheckoutStore = create(
       updateStage: (stage: "cart" | "payment" | "result") => {
         set({ stage });
       },
-      updateOrderResult: (result: "success" | "failure" | "pending") => {
+      updateOrderResult: (result: OrderStatus) => {
         set({ orderResult: result });
       },
       updatePaymentState: (state: {

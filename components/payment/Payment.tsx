@@ -1,4 +1,4 @@
-import { PaymentMethod } from "@/interfaces/ICheckout";
+import { OrderStatus, PaymentMethod } from "@/interfaces/ICheckout";
 import { useCheckoutStore } from "@/store/checkout.store";
 import { getSubtotal } from "@/utils/checkout.helper";
 import {
@@ -91,6 +91,9 @@ function Payment() {
     selectedPaymentMethod,
     paymentState,
     updatePaymentState,
+    updateStage,
+    orderResult,
+    updateOrderResult,
   } = useCheckoutStore((state) => state);
 
   const handleUPIVerification = () => {
@@ -359,8 +362,19 @@ function Payment() {
         </Flex>
         <Button
           size="md"
-          disabled={!selectedPaymentMethod}
-          onClick={() => router.push("/result")}
+          disabled={
+            !selectedPaymentMethod ||
+            !paymentState[selectedPaymentMethod]?.isVerified
+          }
+          onClick={() => {
+            const resultValues = Object.values(OrderStatus);
+            console.log(resultValues);
+            const randomResult =
+              resultValues[Math.floor(Math.random() * resultValues.length)];
+            updateStage("result");
+            updateOrderResult(randomResult as typeof orderResult);
+            router.push("/result");
+          }}
           maw={isSmallScreen ? undefined : 300}
         >
           {STATIC_CONTENT.continue(

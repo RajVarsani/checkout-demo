@@ -11,6 +11,12 @@ export enum PaymentMethod {
   CARDS = "CARDS", // Optionally capitalize enum members; however, consistency is key
 }
 
+export enum OrderStatus {
+  SUCCESS = "success",
+  FAILURE = "failure",
+  PENDING = "pending",
+}
+
 export interface IOrderDetails {
   products: ICartProduct[];
   paymentMethods: PaymentMethod[]; // Now uses the singular enum name
