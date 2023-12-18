@@ -5,6 +5,7 @@ import BillSummary from "./BillSummary";
 import CartEditor from "./CartEditor";
 import { useCheckoutStore } from "@/store/checkout.store";
 import { useRouter } from "next/navigation";
+import { notifications } from "@mantine/notifications";
 
 const STATIC_CONTENT = {
   title: "Your Cart",
@@ -34,6 +35,11 @@ function CartDetails() {
             onClick={() => {
               updateStage("payment");
               router.push("/payment");
+
+              notifications.clean();
+              notifications.show({
+                message: "Redirecting to payment page",
+              });
             }}
           >
             {STATIC_CONTENT.checkout}

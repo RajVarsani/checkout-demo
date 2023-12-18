@@ -4,6 +4,7 @@ import { fetchBrandMetadata } from "@/services/brand.service";
 import { ColorSchemeScript } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import "@mantine/notifications/styles.css";
 import { Metadata } from "next";
 import { Manrope } from "next/font/google";
 

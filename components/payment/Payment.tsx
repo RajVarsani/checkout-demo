@@ -20,6 +20,7 @@ import { IconChevronLeft, IconCircleCheckFilled } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./Payment.module.css";
+import { notifications } from "@mantine/notifications";
 
 const STATIC_CONTENT = {
   title: "Payment",
@@ -374,6 +375,11 @@ function Payment() {
             updateStage("result");
             updateOrderResult(randomResult);
             router.push("/result");
+
+            notifications.clean();
+            notifications.show({
+              message: `Payment ${randomResult}! Redirecting...`,
+            });
           }}
           maw={isSmallScreen ? undefined : 300}
         >

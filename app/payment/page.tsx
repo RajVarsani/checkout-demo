@@ -2,6 +2,7 @@
 
 import Payment from "@/components/payment/Payment";
 import { useCheckoutStore } from "@/store/checkout.store";
+import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -15,15 +16,23 @@ export default function Page() {
     orderResult,
   } = useCheckoutStore();
 
-  if (!cartItems.length || !availablePaymentMethods.length) {
-    router.push("/");
-  }
-
-  if (orderResult === "success" || orderResult === "pending") {
-    router.push("/result");
-  }
-
   React.useEffect(() => {
+    if (!cartItems.length || !availablePaymentMethods.length) {
+      notifications.clean();
+      notifications.show({
+        message: "Fetching cart items before proceeding to payment",
+      });
+      return router.push("/");
+    }
+
+    if (orderResult === "success" || orderResult === "pending") {
+      notifications.clean();
+      notifications.show({
+        message: "This order has already been placed",
+      });
+      return router.push("/result");
+    }
+
     if (stage !== "payment") {
       updateStage("payment");
       return;
